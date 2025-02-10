@@ -5,7 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Coin Clicker</title>
     <style>
-        /* Ваши стили */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #a8e6cf, #dcedc1);
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .tab-button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            cursor: pointer;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .tab-button.active {
+            background-color: #a8e6cf;
+            border-color: #a8e6cf;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        #coin {
+            width: 150px;
+            height: 150px;
+            cursor: pointer;
+            margin: 20px auto;
+            transition: transform 0.1s, box-shadow 0.1s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        #coin:active {
+            transform: scale(0.9);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            filter: brightness(90%);
+        }
+        #score {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #333;
+        }
+        #token-input {
+            padding: 10px;
+            font-size: 16px;
+            width: 80%;
+            max-width: 300px;
+            margin: 20px auto;
+            display: block;
+        }
+        #submit-token {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #token-result {
+            opacity: 0;
+            font-size: 18px;
+            color: #333;
+            margin-top: 20px;
+            animation: fadeInOut 3s ease-in-out forwards;
+        }
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
     </style>
 </head>
 <body>
@@ -28,9 +118,56 @@
         <div id="token-result"></div>
     </div>
 
+    <!-- Звуковой эффект -->
+    <audio id="click-sound">
+        <source src="click.mp3" type="audio/mpeg">
+        Ваш браузер не поддерживает аудио.
+    </audio>
+
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        // Логика отправки токена
+        // Инициализация и открытие на весь экран
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
+
+        // Логика приложения
+        let score = 0;
+        const coin = document.getElementById('coin');
+        const scoreDisplay = document.getElementById('score');
+
+        coin.addEventListener('click', () => {
+            score++;
+            scoreDisplay.textContent = `Очки: ${score}`;
+
+            // Виброотклик
+            Telegram.WebApp.HapticFeedback.impactOccurred('light');
+
+            // Воспроизведение звука
+            const clickSound = document.getElementById('click-sound');
+            if (clickSound) {
+                clickSound.currentTime = 0; // Перемотка на начало
+                clickSound.play().catch(error => console.error("Ошибка воспроизведения звука:", error));
+            }
+        });
+
+        // Логика вкладок
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Убираем активный класс у всех кнопок и контента
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+
+                // Добавляем активный класс к выбранной кнопке и контенту
+                const tabId = button.getAttribute('data-tab');
+                button.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Логика токена
         const tokenInput = document.getElementById('token-input');
         const submitToken = document.getElementById('submit-token');
         const tokenResult = document.getElementById('token-result');
@@ -43,15 +180,15 @@
 
                 // Показываем сообщение пользователю
                 tokenResult.textContent = 'Токен отправлен боту';
-                tokenResult.style.animation = 'none';
+                tokenResult.style.animation = 'none'; // Сбрасываем анимацию
                 setTimeout(() => {
-                    tokenResult.style.animation = 'fadeInOut 3s ease-in-out forwards';
+                    tokenResult.style.animation = 'fadeInOut 3s ease-in-out forwards'; // Запускаем анимацию
                 }, 10);
             } else {
                 tokenResult.textContent = 'Пожалуйста, введите токен';
-                tokenResult.style.animation = 'none';
+                tokenResult.style.animation = 'none'; // Сбрасываем анимацию
                 setTimeout(() => {
-                    tokenResult.style.animation = 'fadeInOut 3s ease-in-out forwards';
+                    tokenResult.style.animation = 'fadeInOut 3s ease-in-out forwards'; // Запускаем анимацию
                 }, 10);
             }
         });
