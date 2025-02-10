@@ -8,9 +8,9 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #f0f0f0;
             margin: 0;
             padding: 0;
+            background: linear-gradient(135deg, #a8e6cf, #dcedc1); /* Градиентный фон */
         }
         #coin {
             width: 150px;
@@ -29,14 +29,21 @@
             font-size: 24px;
             font-weight: bold;
             margin-top: 20px;
+            color: #333; /* Цвет текста */
         }
     </style>
 </head>
 <body>
     <h1>Coin Clicker</h1>
     <p>Нажимай на монету, чтобы заработать очки!</p>
-    <img id="coin" src="https://cdn-icons-png.flaticon.com/512/3523/3523887.png" alt="Coin">
+    <img id="coin" src="coin.png" alt="Coin"> <!-- Новая иконка монеты -->
     <div id="score">Очки: 0</div>
+
+    <!-- Звуковой эффект -->
+    <audio id="click-sound">
+        <source src="click.mp3" type="audio/mpeg">
+        Ваш браузер не поддерживает аудио.
+    </audio>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
@@ -55,6 +62,13 @@
 
             // Виброотклик
             Telegram.WebApp.HapticFeedback.impactOccurred('light');
+
+            // Воспроизведение звука
+            const clickSound = document.getElementById('click-sound');
+            if (clickSound) {
+                clickSound.currentTime = 0; // Перемотка на начало
+                clickSound.play().catch(error => console.error("Ошибка воспроизведения звука:", error));
+            }
         });
     </script>
 </body>
