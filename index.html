@@ -175,20 +175,20 @@
         submitToken.addEventListener('click', () => {
             const token = tokenInput.value.trim();
             if (token) {
-                // Отправляем токен боту
-                Telegram.sendData(JSON.stringify({ token: token }));
+                console.log("Отправляем токен:", token); // Логируем токен
+                Telegram.WebApp.sendData(JSON.stringify({ token: token }));
 
                 // Показываем сообщение пользователю
                 tokenResult.textContent = 'Токен отправлен боту';
-                tokenResult.style.animation = 'none'; // Сбрасываем анимацию
+                tokenResult.style.animation = 'none';
                 setTimeout(() => {
-                    tokenResult.style.animation = 'fadeInOut 3s ease-in-out forwards'; // Запускаем анимацию
+                    tokenResult.style.animation = 'fadeInOut 3s ease-in-out forwards';
                 }, 10);
             } else {
                 tokenResult.textContent = 'Пожалуйста, введите токен';
-                tokenResult.style.animation = 'none'; // Сбрасываем анимацию
+                tokenResult.style.animation = 'none';
                 setTimeout(() => {
-                    tokenResult.style.animation = 'fadeInOut 3s ease-in-out forwards'; // Запускаем анимацию
+                    tokenResult.style.animation = 'fadeInOut 3s ease-in-out forwards';
                 }, 10);
             }
         });
