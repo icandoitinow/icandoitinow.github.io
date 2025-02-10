@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coin Clicker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        #coin {
+            width: 150px;
+            height: 150px;
+            cursor: pointer;
+            margin: 20px auto;
+            transition: transform 0.1s;
+        }
+        #coin:active {
+            transform: scale(0.9);
+        }
+        #score {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Coin Clicker</h1>
+    <p>Нажимай на монету, чтобы заработать очки!</p>
+    <img id="coin" src="https://cdn-icons-png.flaticon.com/512/3523/3523887.png" alt="Coin">
+    <div id="score">Очки: 0</div>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        // Инициализация
+        let score = 0;
+        const coin = document.getElementById('coin');
+        const scoreDisplay = document.getElementById('score');
+
+        // Обработчик клика по монете
+        coin.addEventListener('click', () => {
+            score++;
+            scoreDisplay.textContent = `Очки: ${score}`;
+        });
+
+        // Отправка данных в Telegram (если нужно)
+        Telegram.WebApp.ready();
+        Telegram.WebApp.onEvent('mainButtonClicked', () => {
+            Telegram.WebApp.sendData(JSON.stringify({ score }));
+            Telegram.WebApp.close();
+        });
+    </script>
+</body>
+</html>
