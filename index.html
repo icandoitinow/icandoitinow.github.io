@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Coin Clicker</title>
     <style>
         body {
@@ -37,22 +37,18 @@
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        // Инициализация
+        // Инициализация и открытие на весь экран
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
+
+        // Логика приложения
         let score = 0;
         const coin = document.getElementById('coin');
         const scoreDisplay = document.getElementById('score');
 
-        // Обработчик клика по монете
         coin.addEventListener('click', () => {
             score++;
             scoreDisplay.textContent = `Очки: ${score}`;
-        });
-
-        // Отправка данных в Telegram (если нужно)
-        Telegram.WebApp.ready();
-        Telegram.WebApp.onEvent('mainButtonClicked', () => {
-            Telegram.WebApp.sendData(JSON.stringify({ score }));
-            Telegram.WebApp.close();
         });
     </script>
 </body>
