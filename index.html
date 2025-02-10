@@ -17,10 +17,13 @@
             height: 150px;
             cursor: pointer;
             margin: 20px auto;
-            transition: transform 0.1s;
+            transition: transform 0.1s, box-shadow 0.1s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         #coin:active {
             transform: scale(0.9);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            filter: brightness(90%);
         }
         #score {
             font-size: 24px;
@@ -49,6 +52,9 @@
         coin.addEventListener('click', () => {
             score++;
             scoreDisplay.textContent = `Очки: ${score}`;
+
+            // Виброотклик
+            Telegram.WebApp.HapticFeedback.impactOccurred('light');
         });
     </script>
 </body>
