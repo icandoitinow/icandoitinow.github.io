@@ -10,7 +10,31 @@
             text-align: center;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #a8e6cf, #dcedc1); /* Градиентный фон */
+            background: linear-gradient(135deg, #a8e6cf, #dcedc1);
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .tab-button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            cursor: pointer;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .tab-button.active {
+            background-color: #a8e6cf;
+            border-color: #a8e6cf;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
         }
         #coin {
             width: 150px;
@@ -29,15 +53,50 @@
             font-size: 24px;
             font-weight: bold;
             margin-top: 20px;
-            color: #333; /* Цвет текста */
+            color: #333;
+        }
+        #token-input {
+            padding: 10px;
+            font-size: 16px;
+            width: 80%;
+            max-width: 300px;
+            margin: 20px auto;
+            display: block;
+        }
+        #submit-token {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #token-result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
         }
     </style>
 </head>
 <body>
-    <h1>Coin Clicker</h1>
-    <p>Нажимай на монету, чтобы заработать очки!</p>
-    <img id="coin" src="coin.png" alt="Coin"> <!-- Новая иконка монеты -->
-    <div id="score">Очки: 0</div>
+    <div class="tabs">
+        <button class="tab-button active" data-tab="home">Главная</button>
+        <button class="tab-button" data-tab="token">Токен</button>
+    </div>
+
+    <div id="home" class="tab-content active">
+        <h1>Coin Clicker</h1>
+        <p>Нажимай на монету, чтобы заработать очки!</p>
+        <img id="coin" src="click.png" alt="Coin">
+        <div id="score">Очки: 0</div>
+    </div>
+
+    <div id="token" class="tab-content">
+        <h1>Сканирование токена</h1>
+        <input type="text" id="token-input" placeholder="Введите токен">
+        <button id="submit-token">Подтвердить</button>
+        <div id="token-result"></div>
+    </div>
 
     <!-- Звуковой эффект -->
     <audio id="click-sound">
@@ -68,6 +127,37 @@
             if (clickSound) {
                 clickSound.currentTime = 0; // Перемотка на начало
                 clickSound.play().catch(error => console.error("Ошибка воспроизведения звука:", error));
+            }
+        });
+
+        // Логика вкладок
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Убираем активный класс у всех кнопок и контента
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+
+                // Добавляем активный класс к выбранной кнопке и контенту
+                const tabId = button.getAttribute('data-tab');
+                button.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Логика токена
+        const tokenInput = document.getElementById('token-input');
+        const submitToken = document.getElementById('submit-token');
+        const tokenResult = document.getElementById('token-result');
+
+        submitToken.addEventListener('click', () => {
+            const token = tokenInput.value.trim();
+            if (token) {
+                tokenResult.textContent = 'Токен отсканирован';
+            } else {
+                tokenResult.textContent = 'Пожалуйста, введите токен';
             }
         });
     </script>
