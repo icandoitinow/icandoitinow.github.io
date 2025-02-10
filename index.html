@@ -176,7 +176,7 @@
             const token = tokenInput.value.trim();
             if (token) {
                 // Отправляем токен боту
-                Telegram.WebApp.sendData(JSON.stringify({ token: token }));
+                Telegram.sendData(JSON.stringify({ token: token }));
 
                 // Показываем сообщение пользователю
                 tokenResult.textContent = 'Токен отправлен боту';
