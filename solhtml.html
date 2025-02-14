@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phantom Wallet Integration</title>
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <h1>Подключение Phantom Wallet</h1>
+    <button id="connectWallet">Подключить Phantom Wallet</button>
+    <p id="walletAddress"></p>
+
+    <script>
+        const connectWalletButton = document.getElementById('connectWallet');
+        const walletAddressParagraph = document.getElementById('walletAddress');
+
+        // Инициализация Telegram Web App
+        const tg = window.Telegram.WebApp;
+
+        // Функция для подключения кошелька Phantom
+        async function connectPhantomWallet() {
+            if (window.solana && window.solana.isPhantom) {
+                try {
+                    // Запрос на подключение кошелька
+                    const response = await window.solana.connect();
+                    const publicKey = response.publicKey.toString();
+
+                    // Отображение адреса кошелька
+                    walletAddressParagraph.textContent = `Адрес кошелька: ${publicKey}`;
+
+                    // Отправка адреса кошелька в Telegram
+                    tg.sendData(publicKey);
+                } catch (err) {
+                    console.error('Ошибка при подключении кошелька:', err);
+                }
+            } else {
+                alert('Phantom Wallet не найден! Установите расширение Phantom.');
+            }
+        }
+
+        // Обработчик нажатия на кнопку
+        connectWalletButton.addEventListener('click', connectPhantomWallet);
+
+        // Инициализация Telegram Web App
+        tg.ready();
+    </script>
+</body>
+</html>
